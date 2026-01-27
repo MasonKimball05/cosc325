@@ -1,0 +1,117 @@
+C Imperative Paradigm Lab - Reflection Answers
+================================================
+
+PART 1 - Variables, State, and Sequence
+----------------------------------------
+
+Task 1.1 - Predict vs Run:
+- Original: x = 2, then x = x + 3 (x becomes 5), then x = x * 4 (x becomes 20)
+- Output: x=20
+
+Reflection 1.1: What changed over time?
+- The VALUE stored in variable x changed: 2 → 5 → 20
+- The intermediate values lived in the MEMORY location assigned to variable x
+- Each assignment overwrote the previous value in that memory location
+
+Task 1.2 - Order Matters:
+- Swapped: y = 2, then y = y * 4 (y becomes 8), then y = y + 3 (y becomes 11)
+- Output: y=11
+
+Reflection 1.2: Did the meaning change?
+- YES! The final value changed from 20 to 11 because imperative languages 
+  execute statements sequentially, and each statement depends on the current 
+  state. Order determines which state each operation sees.
+
+
+PART 2 - Control Flow
+----------------------
+
+Implementation Details:
+- Created a mutable local variable 'sum' initialized to 0
+- Used a for loop to iterate from 1 to n (inclusive)
+- Accumulated the sum by adding each i to sum
+- Returned the final sum value
+
+Reflection 2.1: Where control and state happen:
+- CONTROL: The for loop header (for (int i = 1; i <= n; i++))
+- STATE CHANGES:
+  * Line: int sum = 0;  (initial state)
+  * Line: sum += i;     (state mutation in each iteration)
+
+Reflection 2.2: What Python/Java hide:
+- Python sum(range(1, n+1)) hides:
+  * The explicit loop structure
+  * The mutable accumulator variable
+  * The iteration mechanics
+  
+- Java IntStream.rangeClosed(1,n).sum() hides:
+  * The loop implementation
+  * The accumulation logic
+  * The state management
+
+In C, you must explicitly write the iteration control and state mutation.
+
+
+PART 3 - Functions as Procedures
+---------------------------------
+
+Implementation Details:
+- Called sum_to(n) to get the total sum
+- Cast the result to double using (double) to avoid integer division
+- Divided by n to get the average
+- Returned the double result
+
+Reflection 3.1: What C requires that Java/Python infer:
+- EXPLICIT TYPE CASTING: (double)sum_to(n) to convert int to double
+- Java/Python automatically promote integers to floating-point during division
+- C requires explicit casting or the division truncates to an integer
+- Return type must be explicitly declared as double
+
+
+PART 4 - Pass-by-Value and Pointers
+------------------------------------
+
+Reflection 4.1: Why didn't 'a' change in increment_bad?
+- C uses PASS-BY-VALUE, meaning increment_bad receives a COPY of a's value
+- The function modifies its local copy (the parameter x), not the original variable
+- When the function returns, the local copy is destroyed and 'a' remains unchanged
+
+Reflection 4.2: What a pointer gives you:
+- A pointer provides the MEMORY ADDRESS of a variable, enabling multiple 
+  functions to share and modify the same storage location (shared state).
+- By passing &a (address of a), increment can dereference the pointer (*x) 
+  to access and modify the original variable's value.
+
+
+IMPLEMENTATION SUMMARY
+======================
+
+Part 2 - sum_to(n):
+  int sum = 0;
+  for (int i = 1; i <= n; i++) {
+      sum += i;
+  }
+  return sum;
+
+Part 3 - avg_1_to_n(n):
+  return (double)sum_to(n) / n;
+
+Part 4 - increment(int *x):
+  (*x)++;
+
+Expected Output:
+  --- Part 1: State and Sequence ---
+  x=20
+  After swapping last two assignments:
+  y=11
+  
+  --- Part 2: Control Flow ---
+  sum_to(5) = 15 (expected 15)
+  sum_to(1) = 1 (expected 1)
+  
+  --- Part 3: Functions as Procedures ---
+  avg_1_to_n(5) = 3.0 (expected 3.0)
+  
+  --- Part 4: Pass-by-Value vs Pointers ---
+  after increment_bad: a=5 (expected 5)
+  after increment:     a=6 (expected 6)
